@@ -183,10 +183,12 @@ model Video {
   title      String
   url        String
   thumbnail  String?
+  publicId   String?          // Cloudinary public_id (uploads); null for external URLs
   moderation ModerationStatus @default(APPROVED)
   createdAt  DateTime         @default(now())
 
   @@index([studentId])
+  @@index([publicId])
 }
 
 model Statistic {

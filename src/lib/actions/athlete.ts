@@ -86,12 +86,19 @@ export async function addVideo(
     }
   }
 
+  // Cloudinary uploads carry a publicId; those go through moderation (PENDING)
+  // and are flipped to APPROVED/REJECTED by the moderation webhook. External
+  // URLs (no publicId) keep the existing default (APPROVED).
+  const publicId = (formData.get("publicId") as string | null) || null;
+
   await prisma.video.create({
     data: {
       studentId: profile.id,
       title: parsed.data.title,
       url: parsed.data.url,
       thumbnail: parsed.data.thumbnail || null,
+      publicId,
+      moderation: publicId ? "PENDING" : "APPROVED",
     },
   });
   revalidatePath("/athlete/profile");

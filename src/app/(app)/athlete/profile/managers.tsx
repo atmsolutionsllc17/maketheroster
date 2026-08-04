@@ -1,8 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Trash2, Plus, ExternalLink } from "lucide-react";
+import { Trash2, Plus, ExternalLink, Clock } from "lucide-react";
+import {
+  CloudinaryVideoUpload,
+  type UploadedVideo,
+} from "@/components/cloudinary-video-upload";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -58,18 +62,22 @@ export function VideosManager({
   videos,
   canAddMore,
   limitLabel,
+  uploadsEnabled = false,
 }: {
   videos: Video[];
   canAddMore: boolean;
   limitLabel?: string;
+  uploadsEnabled?: boolean;
 }) {
   const [state, formAction] = useActionState<ActionState, FormData>(addVideo, {});
   const formRef = useRef<HTMLFormElement>(null);
+  const [uploaded, setUploaded] = useState<UploadedVideo | null>(null);
 
   useEffect(() => {
     if (state.success) {
       toast.success("Video added");
       formRef.current?.reset();
+      setUploaded(null);
     } else if (state.error) {
       toast.error(state.error);
     }
@@ -89,7 +97,19 @@ export function VideosManager({
             className="flex items-center justify-between gap-3 rounded-lg border p-3"
           >
             <div className="min-w-0">
-              <p className="truncate font-medium">{v.title}</p>
+              <p className="flex items-center gap-2 truncate font-medium">
+                {v.title}
+                {v.moderation === "PENDING" && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600">
+                    <Clock className="size-3" /> Pending review
+                  </span>
+                )}
+                {v.moderation === "REJECTED" && (
+                  <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive">
+                    Rejected
+                  </span>
+                )}
+              </p>
               <a
                 href={v.url}
                 target="_blank"
@@ -105,25 +125,49 @@ export function VideosManager({
       </ul>
 
       {canAddMore ? (
-        <form ref={formRef} action={formAction} className="space-y-3 rounded-lg border p-4">
-          <div className="grid gap-3 sm:grid-cols-2">
+        uploadsEnabled ? (
+          <form ref={formRef} action={formAction} className="space-y-3 rounded-lg border p-4">
             <div className="space-y-2">
               <Label htmlFor="v-title">Title</Label>
               <Input id="v-title" name="title" placeholder="Senior season highlights" required />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="v-url">Video URL</Label>
-              <Input id="v-url" name="url" type="url" placeholder="https://youtube.com/…" required />
+            <CloudinaryVideoUpload onUploaded={setUploaded} />
+            {uploaded && (
+              <>
+                <input type="hidden" name="url" value={uploaded.url} />
+                <input type="hidden" name="publicId" value={uploaded.publicId} />
+                <input type="hidden" name="thumbnail" value={uploaded.thumbnail ?? ""} />
+              </>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Uploaded videos are automatically scanned for inappropriate content
+              and viruses, and go live once approved.
+            </p>
+            <SubmitButton disabled={!uploaded}>
+              <Plus className="size-4" /> Add video
+            </SubmitButton>
+          </form>
+        ) : (
+          <form ref={formRef} action={formAction} className="space-y-3 rounded-lg border p-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="v-title">Title</Label>
+                <Input id="v-title" name="title" placeholder="Senior season highlights" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="v-url">Video URL</Label>
+                <Input id="v-url" name="url" type="url" placeholder="https://youtube.com/…" required />
+              </div>
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="v-thumb">Thumbnail URL (optional)</Label>
-            <Input id="v-thumb" name="thumbnail" type="url" placeholder="https://…" />
-          </div>
-          <SubmitButton>
-            <Plus className="size-4" /> Add video
-          </SubmitButton>
-        </form>
+            <div className="space-y-2">
+              <Label htmlFor="v-thumb">Thumbnail URL (optional)</Label>
+              <Input id="v-thumb" name="thumbnail" type="url" placeholder="https://…" />
+            </div>
+            <SubmitButton>
+              <Plus className="size-4" /> Add video
+            </SubmitButton>
+          </form>
+        )
       ) : (
         <div className="rounded-lg border border-amber-500/40 bg-amber-500/5 p-4 text-sm">
           {limitLabel}

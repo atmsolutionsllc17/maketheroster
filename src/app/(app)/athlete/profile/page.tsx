@@ -19,6 +19,7 @@ import {
   DocumentsManager,
 } from "./managers";
 import { canUploadUnlimitedVideos, FREE_VIDEO_LIMIT } from "@/lib/plans";
+import { cloudinaryConfigured } from "@/lib/cloudinary";
 
 export default async function AthleteProfilePage() {
   const user = await requireRole("ATHLETE");
@@ -71,6 +72,7 @@ export default async function AthleteProfilePage() {
               <VideosManager
                 videos={profile.videos}
                 canAddMore={canAddVideo}
+                uploadsEnabled={cloudinaryConfigured()}
                 limitLabel={`You've reached the ${FREE_VIDEO_LIMIT}-video limit on the Free plan. Upgrade to Premium for unlimited highlight videos.`}
               />
             </TabsContent>
