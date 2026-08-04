@@ -242,6 +242,31 @@ export default async function AthleteDetailPage({
           )}
         </Section>
 
+        {/* Photo gallery */}
+        {profile.galleryUrls.length > 0 && (
+          <Section title={`Gallery (${profile.galleryUrls.length})`}>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {profile.galleryUrls.map((src) => (
+                <a
+                  key={src}
+                  href={src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative aspect-square overflow-hidden rounded-lg border bg-muted"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt={`${profile.firstName} ${profile.lastName}`}
+                    loading="lazy"
+                    className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </a>
+              ))}
+            </div>
+          </Section>
+        )}
+
         {/* Stats */}
         <Section title="Statistics">
           {profile.statistics.length === 0 ? (

@@ -82,13 +82,14 @@ model StudentProfile {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Personal
-  firstName String
-  lastName  String
-  photoUrl  String?
-  location  String?
-  state     String?
-  height    Int? // inches
-  weight    Int? // lbs
+  firstName   String
+  lastName    String
+  photoUrl    String?
+  galleryUrls String[] @default([]) // extra photos for the profile gallery
+  location    String?
+  state       String?
+  height      Int? // inches
+  weight      Int? // lbs
 
   // Academics
   gpa           Float?
