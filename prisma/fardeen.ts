@@ -41,7 +41,7 @@ async function main() {
           sport: "Soccer",
           position: "Forward",
           school: "Bayside High School",
-          graduationYear: 2026, // placeholder — confirm 2026 vs 2027
+          graduationYear: 2027, // confirmed by user
           verified: true,
           boosted: true,
           bio: "Fardeen Islam is a senior forward at Bayside High School who wears the #9 up top. A two-footed attacker with real pace, sharp off-ball movement, and a striker's instinct in the box, he competes year-round across both his high school and club leagues. His ambition is clear: earn a spot at the collegiate level, break into an MLS academy pathway, and ultimately get drafted into MLS. A hungry, coachable forward ready for the next level.",

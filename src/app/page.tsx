@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
 
 const COVERED_SPORTS = [
   { name: "Soccer", athletes: "3,100+", img: "/sport-soccer.jpg", pos: "50% 55%" },
@@ -37,6 +38,24 @@ const MONTAGE = [
 
 export default async function LandingPage() {
   const session = await auth();
+  const featured = await prisma.studentProfile.findFirst({
+    where: { boosted: true, verified: true },
+    orderBy: { updatedAt: "desc" },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      photoUrl: true,
+      galleryUrls: true,
+      sport: true,
+      position: true,
+      school: true,
+      state: true,
+      graduationYear: true,
+      bio: true,
+      _count: { select: { videos: true, profileViews: true } },
+    },
+  });
 
   return (
     <div className="relative min-h-full overflow-hidden bg-[#070b16] text-slate-100">
@@ -202,6 +221,80 @@ export default async function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ============ FEATURED ATHLETE ============ */}
+      {featured && (
+        <section className="relative z-10 mx-auto w-full max-w-7xl px-5 py-20">
+          <div className="mb-10 max-w-2xl">
+            <p className="text-sm font-semibold tracking-wide text-[#8ab0ff] uppercase">
+              Featured athlete
+            </p>
+            <h2 className="font-display mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Meet a rising prospect.
+            </h2>
+          </div>
+
+          <div className="grid overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] lg:grid-cols-2">
+            <div
+              className="relative min-h-[320px] bg-cover bg-center lg:min-h-full"
+              style={{
+                backgroundImage: `url('${featured.photoUrl ?? featured.galleryUrls[0] ?? ""}')`,
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-[#070b16]/70 via-transparent to-transparent lg:bg-gradient-to-r" />
+              <div className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-[#f2c14e] px-3 py-1 text-xs font-bold text-[#1a1400] uppercase">
+                <Star className="size-3.5" fill="currentColor" /> Featured
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-center gap-4 p-7 sm:p-10">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-display text-3xl font-bold tracking-tight text-white">
+                    {featured.firstName} {featured.lastName}
+                  </h3>
+                  <BadgeCheck className="size-6 text-[#4f7cff]" />
+                </div>
+                <p className="mt-1 text-lg text-slate-300">
+                  {featured.sport}
+                  {featured.position ? ` · ${featured.position}` : ""}
+                </p>
+                <p className="mt-1 text-sm text-slate-400">
+                  {featured.school} · Class of {featured.graduationYear}
+                  {featured.state ? ` · ${featured.state}` : ""}
+                </p>
+              </div>
+
+              {featured.bio && (
+                <p className="line-clamp-4 text-sm leading-relaxed text-slate-400">
+                  {featured.bio}
+                </p>
+              )}
+
+              <div className="flex flex-wrap gap-6 text-sm">
+                <div>
+                  <div className="tabular text-2xl font-bold text-white">
+                    {featured._count.videos}
+                  </div>
+                  <div className="text-slate-400">Highlight videos</div>
+                </div>
+                <div>
+                  <div className="tabular text-2xl font-bold text-white">
+                    {featured._count.profileViews}
+                  </div>
+                  <div className="text-slate-400">Profile views</div>
+                </div>
+              </div>
+
+              <div className="mt-2">
+                <PillLink href={`/athletes/${featured.id}`} size="lg">
+                  View full profile <ArrowRight className="size-4" />
+                </PillLink>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ============ SPORTS WE COVER ============ */}
       <section className="mx-auto w-full max-w-7xl px-5 py-24">
