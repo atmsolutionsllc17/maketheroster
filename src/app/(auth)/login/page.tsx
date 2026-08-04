@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Script from "next/script";
 import { useActionState } from "react";
 import {
   Card,
@@ -13,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SubmitButton } from "@/components/submit-button";
 import { loginAction, type ActionState } from "@/lib/actions/auth";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 export default function LoginPage() {
   const [state, formAction] = useActionState<ActionState, FormData>(
@@ -55,6 +58,20 @@ export default function LoginPage() {
               required
             />
           </div>
+          {TURNSTILE_SITE_KEY && (
+            <>
+              <Script
+                src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+                async
+                defer
+              />
+              <div
+                className="cf-turnstile"
+                data-sitekey={TURNSTILE_SITE_KEY}
+                data-theme="dark"
+              />
+            </>
+          )}
           <SubmitButton className="btn-hero w-full">Sign in</SubmitButton>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">

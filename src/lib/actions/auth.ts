@@ -10,6 +10,7 @@ import {
   parentRegisterSchema,
   agentRegisterSchema,
 } from "@/lib/validation";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export type ActionState = {
   error?: string;
@@ -194,6 +195,13 @@ export async function loginAction(
   const password = String(formData.get("password") ?? "");
   if (!email || !password) {
     return { error: "Email and password are required." };
+  }
+
+  const captchaOk = await verifyTurnstile(
+    formData.get("cf-turnstile-response") as string | null,
+  );
+  if (!captchaOk) {
+    return { error: "Captcha verification failed — please try again." };
   }
 
   try {
