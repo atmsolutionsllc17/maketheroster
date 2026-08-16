@@ -51,6 +51,7 @@ async function main() {
             "Two-footed forward with pace & clinical finishing\nCompetes across high school (PSAL) and club leagues\nTargeting an NCAA college & MLS academy pathway",
           videos: {
             create: [
+              { title: "Senior Season Highlights", url: "/media/fardeen/highlights.mp4", thumbnail: P(8), moderation: "APPROVED" },
               { title: "Match Highlights", url: "/media/fardeen/video-1.mp4", thumbnail: P(8), moderation: "APPROVED" },
               { title: "Skills & Goals Reel", url: "/media/fardeen/video-2.mp4", thumbnail: P(3), moderation: "APPROVED" },
             ],
