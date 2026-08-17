@@ -28,7 +28,7 @@ export default function LoginPage() {
       <CardHeader>
         <CardTitle className="text-2xl">Welcome back</CardTitle>
         <CardDescription>
-          Sign in to your AthleteConnect account.
+          Sign in to your Make The Roster account.
         </CardDescription>
       </CardHeader>
       <CardContent>

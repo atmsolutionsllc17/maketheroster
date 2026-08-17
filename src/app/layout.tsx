@@ -23,7 +23,7 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
-  title: "AthleteConnect — Get recruited",
+  title: "Make The Roster — Get recruited",
   description:
     "A recruiting network where student-athletes build verified profiles and coaches discover talent.",
 };

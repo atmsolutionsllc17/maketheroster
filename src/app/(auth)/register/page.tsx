@@ -39,7 +39,7 @@ export default function RegisterChoicePage() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold tracking-tight">Join AthleteConnect</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Join Make The Roster</h1>
         <p className="mt-2 text-muted-foreground">
           How will you be using the platform?
         </p>

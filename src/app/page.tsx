@@ -341,7 +341,7 @@ export default async function LandingPage() {
       <footer className="border-t border-white/5">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-5 py-8 text-sm text-slate-500 sm:flex-row">
           <Logo className="text-white" />
-          <p>© {new Date().getFullYear()} AthleteConnect. Built for the game.</p>
+          <p>© {new Date().getFullYear()} Make The Roster. Built for the game.</p>
         </div>
       </footer>
     </div>

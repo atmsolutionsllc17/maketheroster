@@ -82,7 +82,7 @@ function FeaturedSpotlight({ athlete }: { athlete: FeaturedAthlete }) {
 }
 
 export const metadata = {
-  title: "Browse Athletes — AthleteConnect",
+  title: "Browse Athletes — Make The Roster",
   description: "Discover verified student-athletes across every sport.",
 };
 
